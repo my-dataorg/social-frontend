@@ -6,6 +6,7 @@ Scaffold repo — invoke **planner** before building feed UI.
 
 | Agent | When to use |
 |-------|-------------|
+| **frontend-developer** | **Primary** — all UI implementation when building Social UI |
 | **planner** | Break down Social MVP |
 | **testing-agent** | After implementation |
 | **code-review** | Review diff |
