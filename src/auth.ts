@@ -23,6 +23,20 @@ async function userFromPlatformToken(accessToken: string) {
   };
 }
 
+async function platformTokenStatus(accessToken: string) {
+  try {
+    const response = await fetch(`${platformApi}/v1/users/me`, {
+      headers: { Authorization: `Bearer ${accessToken}` },
+      cache: "no-store",
+      signal: AbortSignal.timeout(4000),
+    });
+    if (response.status === 401 || response.status === 403) return "invalid" as const;
+    return "keep" as const;
+  } catch {
+    return "keep" as const;
+  }
+}
+
 export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [
     Keycloak({
@@ -51,6 +65,10 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         token.accessToken = (user as { accessToken?: string }).accessToken;
       }
       if (account?.access_token) token.accessToken = account.access_token;
+      const accessToken = token.accessToken as string | undefined;
+      if (!user && accessToken && (await platformTokenStatus(accessToken)) === "invalid") {
+        return null;
+      }
       return token;
     },
     async session({ session, token }) {
