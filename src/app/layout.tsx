@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { cookies, headers } from "next/headers";
 import { Geist } from "next/font/google";
+import { ClientMonitor } from "@/components/client-monitor";
 import "./globals.css";
 
 const geist = Geist({ subsets: ["latin"], variable: "--font-geist-sans" });
@@ -19,7 +20,10 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 
   return (
     <html lang="en" className={`${geist.variable} antialiased`} data-embed={embedded ? "1" : undefined}>
-      <body className={embedded ? "embed-mode" : "min-h-full"}>{children}</body>
+      <body className={embedded ? "embed-mode" : "premium-shell min-h-full"}>
+        <ClientMonitor />
+        {children}
+      </body>
     </html>
   );
 }
